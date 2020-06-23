@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "generic/alpine310"
+  config.vm.box = "debian/buster64"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -70,22 +70,21 @@ Vagrant.configure("2") do |config|
   #   apt-get install -y apache2
   # SHELL
   config.vm.provision "shell", inline: <<-SHELL
-    apk add git docker docker-compose
-    rc-update add docker boot
+    # Installing Docker
+    apt-get update
+    apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
+    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+    apt-key fingerprint 0EBFCD88
 
-    # Setup `vagrant` user to run Docker without sudo
-    addgroup -S vagrant docker
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+    apt-get update
+    apt-get install docker-ce -y
 
-    # Alpine recommendations
-    # https://wiki.alpinelinux.org/wiki/Docker#Isolate_containers_with_a_user_namespace
-    # - Disable experimental features
-    # - Disable ipv6
-    # - Disable new privileges (new user gID and uID) https://github.com/moby/moby/pull/20727
-    mkdir -p /etc/docker
-    touch /etc/docker/daemon.json
-    echo '{ "experimental": false, "ipv6": false, "no-new-privileges": false }' > /etc/docker/daemon.json
+    # Enable `vagrant` user to run `docker`
+    usermod -aG docker vagrant
 
-    # Start Docker, idempotently
-    service docker start
+    # Install `docker-compose`
+    curl -fsSL "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
   SHELL
 end
