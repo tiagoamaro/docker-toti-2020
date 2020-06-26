@@ -86,5 +86,9 @@ Vagrant.configure("2") do |config|
     # Install `docker-compose`
     curl -fsSL "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
+
+    # Install nvm+node LTS (12.18.1)
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+    nvm install 12.8.1
   SHELL
 end
