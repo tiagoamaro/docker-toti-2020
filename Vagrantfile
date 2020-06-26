@@ -56,7 +56,7 @@ Vagrant.configure("2") do |config|
     # Customize the amount of memory and CPUs on the VM
     # We want to keep it slim
     vb.cpus = 1
-    vb.memory = 512
+    vb.memory = 1024
   end
   #
   # View the documentation for the provider you are using for more
