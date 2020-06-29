@@ -70,15 +70,11 @@ Vagrant.configure("2") do |config|
   #   apt-get install -y apache2
   # SHELL
   config.vm.provision "shell", inline: <<-SHELL
-    # Installing Docker
     apt-get update
-    apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
-    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-    apt-key fingerprint 0EBFCD88
+    apt-get install curl -y
 
-    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
-    apt-get update
-    apt-get install docker-ce -y
+    # Installing Docker
+    /bin/bash -c "$(curl -fsSL https://get.docker.com)"
 
     # Enable `vagrant` user to run `docker`
     usermod -aG docker vagrant
@@ -86,9 +82,13 @@ Vagrant.configure("2") do |config|
     # Install `docker-compose`
     curl -fsSL "https://github.com/docker/compose/releases/download/1.26.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
+  SHELL
 
-    # Install nvm+node LTS (12.18.1)
+  # Install nvm+node LTS (12.18.1)
+  # NVM needs to be installed as the non-provileged, `vagrant` user
+  config.vm.provision "shell", privileged: false, inline: <<-SHELL
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-    nvm install 12.8.1
+    source ~/.nvm/nvm.sh
+    nvm install 12.18.1
   SHELL
 end
