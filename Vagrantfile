@@ -103,7 +103,6 @@ Vagrant.configure("2") do |config|
     nvm install 12.18.1
 
     # Use `/vagrant` path after SSHing
-    touch ~/.bash_profile
-    echo "cd /vagrant" >> ~/.bash_profile
+    echo "cd /vagrant" >> ~/.bashrc
   SHELL
 end
