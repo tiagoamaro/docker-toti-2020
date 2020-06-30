@@ -82,7 +82,7 @@ Vagrant.configure("2") do |config|
   # SHELL
   config.vm.provision "shell", inline: <<-SHELL
     apt-get update
-    apt-get install curl -y
+    apt-get install curl git -y
 
     # Installing Docker
     /bin/bash -c "$(curl -fsSL https://get.docker.com)"
