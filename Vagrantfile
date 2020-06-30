@@ -14,6 +14,16 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "debian/contrib-stretch64"
 
+  # Require `vagrant-fsnotify` for Angular live-reloading
+  %w(vagrant-fsnotify).each do |plugin|
+    system "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
+  end
+
+  config.trigger.after :up do |t|
+    t.name = "vagrant-fsnotify"
+    t.run = { inline: "vagrant fsnotify" }
+  end
+
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
