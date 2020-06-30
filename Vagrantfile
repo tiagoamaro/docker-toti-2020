@@ -91,5 +91,9 @@ Vagrant.configure("2") do |config|
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
     source ~/.nvm/nvm.sh
     nvm install 12.18.1
+
+    # Use `/vagrant` path after SSHing
+    touch ~/.bash_profile
+    echo "cd /vagrant" >> ~/.bash_profile
   SHELL
 end
